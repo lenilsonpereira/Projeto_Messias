@@ -1,5 +1,5 @@
 import csv
-from flask import Flask, render_template,request, url_for
+from flask import Flask, render_template,request, url_for, redirect
 
 app = Flask(__name__)
 
@@ -33,12 +33,12 @@ def criar_termo():
     termo = request.form['termo']
     definicao = request.form['definicao']
 
-    with open('bd_glossario.csv', newline='', encoding='utf-8') as csvfile:
+    with open('bd_glossario.csv', 'a',  newline='', encoding='utf-8') as csvfile:
         writer = csv.writer(csvfile, delimiter=',')
         writer.writerow([termo, definicao])
 
 
-    return render_template(url_for('glossario'))
+    return redirect(url_for('glossario'))
 
 
 
