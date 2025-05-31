@@ -1,0 +1,13 @@
+{% extends "modelo.html" %}
+
+{% block conteudo %}
+
+<div class="p-5 mb-4 bg-info text-white rounded-3 text-center">
+  <div class="container">
+    <h1 class="display-4 fw-bold">Bem-vindo ao nosso site de Fundamentos Python</h1>
+    <p class="fs-4">Aqui você aprende os conceitos básicos e encontra um dicionário interativo de programação.</p>
+    <a class="btn btn-light btn-lg" href="{{ url_for('glossario') }}">Ver Glossário</a>
+  </div>
+</div>
+
+{% endblock %}
