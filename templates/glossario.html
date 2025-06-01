@@ -17,7 +17,13 @@
           <th scope="row">{{ loop.index }}</th>
           <td>{{ termo[0] }}</td>
           <td>{{ termo[1] }}</td>
-          <td>apagar</td>
+          <td>
+            <form action="{{ url_for('apagar_termo', termo_id=loop.index0) }}" method="POST" style="display: inline;">
+              <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja apagar este termo?');">
+                Apagar
+              </button>
+            </form>
+          </td>
         </tr>
       {% endfor %}
       </tbody>

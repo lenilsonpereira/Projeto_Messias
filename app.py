@@ -60,6 +60,31 @@ def criar_termo():
 
     return redirect(url_for('glossario'))
 
+@app.route('/apagar_termo/<int:termo_id>', methods=['POST'])
+def apagar_termo(termo_id):
+    # Carrega o glossário atual
+    glossario_de_termos = []
+    try:
+        with open('bd_glossario.csv', newline='', encoding='utf-8') as csvfile:
+            reader = csv.reader(csvfile, delimiter=',')
+            for t in reader:
+                glossario_de_termos.append(t)
+    except FileNotFoundError:
+        return redirect(url_for('glossario'))
+    
+    # Remove o termo pelo índice, se existir
+    if 0 <= termo_id < len(glossario_de_termos):
+        glossario_de_termos.pop(termo_id)
+        
+        # Reescreve o arquivo CSV sem o termo removido
+        with open('bd_glossario.csv', 'w', newline='', encoding='utf-8') as csvfile:
+            writer = csv.writer(csvfile, delimiter=',')
+            for termo in glossario_de_termos:
+                writer.writerow(termo)
+    
+    # Redireciona de volta para a página do glossário
+    return redirect(url_for('glossario'))
+
 # --- Rotas do Gemini (INÍCIO) ---
 @app.route('/duvidas')
 def duvidas():
