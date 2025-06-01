@@ -1,0 +1,89 @@
+<!-- templates/duvidas.html -->
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Assistente Gemini para Dúvidas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f2f5;
+      padding: 2rem;
+    }
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    textarea {
+      width: 100%;
+      height: 120px;
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      resize: vertical;
+    }
+    button {
+      margin-top: 1rem;
+      padding: 0.7rem 1.5rem;
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      font-size: 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .resposta {
+      margin-top: 2rem;
+      padding: 1rem;
+      background: #f9f9f9;
+      border-left: 4px solid #4CAF50;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Assistente Gemini</h1>
+    <p>Digite sua pergunta sobre Python ou programação:</p>
+    <textarea id="pergunta" placeholder="Ex: Como funciona um loop for em Python?"></textarea>
+    <button onclick="enviarPergunta()">Enviar</button>
+    <div class="resposta" id="resposta"></div>
+  </div>
+
+  <script>
+    async function enviarPergunta() {
+      const pergunta = document.getElementById("pergunta").value;
+      const respostaDiv = document.getElementById("resposta");
+      respostaDiv.innerHTML = "Carregando resposta...";
+
+      try {
+        const response = await fetch("/ask_gemini", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ question: pergunta })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          respostaDiv.innerHTML = data.answer;
+        } else {
+          respostaDiv.innerHTML = `Erro: ${data.error}`;
+        }
+      } catch (error) {
+        respostaDiv.innerHTML = `Erro ao conectar com o servidor: ${error}`;
+      }
+    }
+  </script>
+</body>
+</html>
