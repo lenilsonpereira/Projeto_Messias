@@ -1,26 +1,38 @@
+from dotenv import load_dotenv
+load_dotenv()
+
 import csv
 from flask import Flask, render_template, request, url_for, redirect, jsonify
 import google.generativeai as genai
 import os
-from dotenv import load_dotenv
+
 
 app = Flask(__name__)
 
 # --- Configuração do Gemini (INÍCIO) ---
 # Carrega as variáveis de ambiente do arquivo .env
-load_dotenv()
+
 
 # Configura sua chave de API do Gemini usando variável de ambiente
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 
 # Inicializa o modelo Gemini UMA ÚNICA VEZ ao iniciar o servidor
+
 try:
-    model = genai.GenerativeModel(model_name="models/gemini-1.5-flash")
-    print("Modelo Gemini 1.5 Flash carregado com sucesso.")
+    API_KEY_GEMINI = os.getenv("GEMINI_API_KEY")
+    if not API_KEY_GEMINI:
+        print("ERRO: Variável de ambiente GEMINI_API_KEY não definida. A API do Gemini não será configurada.")
+        model = None # Garante que o modelo é None se a chave não for encontrada
+    else:
+        # Apenas configure se a chave existir
+        print("INFO: Variável de ambiente GEMINI_API_KEY encontrada. Configurando a API do Gemini...")
+        genai.configure(api_key=API_KEY_GEMINI)
+        model = genai.GenerativeModel('gemini-pro')
+        print("INFO: API do Gemini configurada com sucesso.")
 except Exception as e:
-    print(f"Erro ao carregar o modelo Gemini: {e}")
-    model = None
+    print(f"ERRO CRÍTICO ao configurar a API do Gemini: {e}")
+    model = None # Define model como None se a configuração falhar
 # --- Configuração do Gemini (FIM) ---
 
 @app.route('/')
