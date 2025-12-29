@@ -15,11 +15,12 @@ genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 
 try:
-    model = genai.GenerativeModel(model_name="models/gemini-1.5-flash")
+    model = genai.GenerativeModel(model_name="gemini-2.5-flash")
     print("Modelo Gemini 1.5 Flash carregado com sucesso.")
 except Exception as e:
     print(f"Erro ao carregar o modelo Gemini: {e}")
     model = None
+
 
 
 @app.route('/')
