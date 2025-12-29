@@ -17,7 +17,8 @@
           <th scope="row">{{ loop.index }}</th>
           <td>{{ termo[0] }}</td>
           <td>{{ termo[1] }}</td>
-          <td>apagar</td>
+          <td><a href="{{ url_for('deletar_termo', id=loop.index) }}" onclick="return confirm('Tem certeza que deseja apagar este termo?')">apagar</a></td>
+
         </tr>
       {% endfor %}
       </tbody>

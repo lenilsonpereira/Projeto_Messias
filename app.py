@@ -6,22 +6,21 @@ from dotenv import load_dotenv
 
 app = Flask(__name__)
 
-# --- Configuração do Gemini (INÍCIO) ---
-# Carrega as variáveis de ambiente do arquivo .env
+
 load_dotenv()
 
-# Configura sua chave de API do Gemini usando variável de ambiente
+
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 
-# Inicializa o modelo Gemini UMA ÚNICA VEZ ao iniciar o servidor
+
 try:
     model = genai.GenerativeModel(model_name="models/gemini-1.5-flash")
     print("Modelo Gemini 1.5 Flash carregado com sucesso.")
 except Exception as e:
     print(f"Erro ao carregar o modelo Gemini: {e}")
     model = None
-# --- Configuração do Gemini (FIM) ---
+
 
 @app.route('/')
 def ola():
@@ -60,7 +59,35 @@ def criar_termo():
 
     return redirect(url_for('glossario'))
 
-# --- Rotas do Gemini (INÍCIO) ---
+
+@app.route('/deletar_termo/<int:id>', methods=['GET'])
+def deletar_termo(id):
+    glossario_de_termos = []
+    try:
+
+        with open('bd_glossario.csv', newline='', encoding='utf-8') as csvfile:
+            reader = csv.reader(csvfile, delimiter=',')
+            glossario_de_termos = list(reader)
+
+
+        if 1 <= id <= len(glossario_de_termos):
+
+            del glossario_de_termos[id - 1]
+
+
+            with open('bd_glossario.csv', 'w', newline='', encoding='utf-8') as csvfile:
+                writer = csv.writer(csvfile, delimiter=',')
+                writer.writerows(glossario_de_termos)
+        else:
+
+            pass
+    except FileNotFoundError:
+        print("Arquivo 'bd_glossario.csv' não encontrado.")
+
+
+    return redirect(url_for('glossario'))
+
+
 @app.route('/duvidas')
 def duvidas():
     return render_template('duvidas.html')
